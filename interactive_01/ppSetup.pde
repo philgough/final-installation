@@ -72,6 +72,8 @@ void ppSetup(float pp_w, float pp_h)
   } // end for x
   riverBG.endDraw();
   riverBuffer = riverBG.get();
+    thread("drawRiverBG");
+
 }
 
 
@@ -79,20 +81,28 @@ void ppSetup(float pp_w, float pp_h)
 
 void drawRiverBG() {
   println("starting river draw thread");
+  // loop forever
   while(true)
   {
-  //bufferReady = true;
+  // start drawing the background
   riverBG.beginDraw();
+  // load the pixels from the image
   riverBG.loadPixels();
+  // pick one frame and stick with it for the entire loop (we aren't in the draw function any more, toto), or the water looks streaky.
+  float thisFrame = frameCount * 0.0015;
   // colour the pixels by their nearest cell
   for (int i = 0; i < riverBG.pixels.length; i++) {
-    satList[i] += sin(radians(pixelList[i] * frameCount*0.0015)) * 10;
-    riverBG.pixels[i] = color(hueList[i], satList[i], 100, 100);
+    float satVal = satList[i] + sin(radians(pixelList[i] * thisFrame)) * 10;
+    riverBG.pixels[i] = color(hueList[i], satVal, 100, 100);
   }
+  // that's the drawing we're gonna do
   riverBG.updatePixels();
   riverBG.endDraw();
+  // let the draw loop know that we're updating the buffer
   bufferReady = false;
+  // update the buffer
   riverBuffer = riverBG.get();
+  // tell the draw loop we're done
   bufferReady = true;
   }
 }
