@@ -28,6 +28,7 @@ void ppSetup(float pp_w, float pp_h)
 {
   // create the poisson distribution
   pp = new PoissonPoints(this, 10000, 10, 40, pp_w, pp_h);
+  setupRiverBed(1920, 300);
 
   // initialize the river graphic
   riverBG = createGraphics(int(pp_w), int(pp_h));
@@ -116,17 +117,10 @@ void setupRiverBed (int rb_w, int rb_h)
   riverBedBG = createGraphics(rb_w, rb_h);
 
   riverBedBG.beginDraw();
+  riverBedBG.fill(100, 100, 100);
+  riverBedBG.rect(0, 0, rb_w, rb_h);  
   riverBedBG.loadPixels();
 
-
-  //int[] rb_pixelList;
-  //float[] rb_hueList;
-  //float[] rb_satList;
-
-
-  //rb_pixelList = new int[riverBedBG.pixels.length];
-  //rb_hueList = new float[riverBedBG.pixels.length];
-  //rb_satList = new float[riverBedBG.pixels.length];
   for (int x = 0; x < rb_w; x++) 
   {
     for (int y = 0; y < rb_h; y++) 
@@ -135,8 +129,7 @@ void setupRiverBed (int rb_w, int rb_h)
       float distToClosestLocation = 9001;
       for (int i = 0; i < pp.ppLocations.length; i++) 
       {
-        // color colour = color(i, 100, 100, 100);
-        // float mapx = map(pp.getPPLocation(i).x, 0, rb_w, 0, rb_w*widthScale);
+        // which is the closest poisson point to the current pixel
         float distToThisLocation = dist(pp.getPPLocation(i).x, pp.getPPLocation(i).y, x, y);
         if (distToThisLocation < distToClosestLocation) 
         {
@@ -146,9 +139,9 @@ void setupRiverBed (int rb_w, int rb_h)
       } // end for i
       int xyToPixelArray = x + y * int(rb_w);
       // draw onto the image
-      float rb_hue = 10+(closestLocation)%10;
-      float rb_sat = 70+(closestLocation)%10;
-      riverBedBG.pixels[xyToPixelArray] = color(rb_hue, rb_sat, 80);
+      float rb_hue = 10+(closestLocation)%15;
+      float rb_sat = 70+(closestLocation)%20;
+      riverBedBG.pixels[xyToPixelArray] = color(rb_hue, rb_sat, 60);
     } // end for y
   } // end for x
   
