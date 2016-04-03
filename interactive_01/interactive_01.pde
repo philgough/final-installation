@@ -13,7 +13,7 @@ void setup ()
 
   // set up the poisson points for river/benthic backgrounds
   ppSetup(1920, 300);
-
+  setupRiverBed(1920, 300);
   fill(360);
   noStroke();
 }
@@ -26,14 +26,15 @@ void draw()
   image(bg, 0, 0);  
   text(frameRate, 10, 10);
   // if the buffer isn't being drawn to right now
+  image(riverBedBG, 0, (height - 300));  
   if (bufferReady)
   {
     // draw the watery image 
-    image(riverBuffer, 0, 300);
+    image(riverBuffer, 0, height-600);
   } else
   {
     // draw the image that the watery image is beign updated from.
-    image(riverBG, 0, 300);
+    image(riverBG, 0, (height-600));
   } // end if/else bufferReady
-  // image(riverBG, 0, 300);
+  
 }
